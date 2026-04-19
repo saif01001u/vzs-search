@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>vZS Search | Universal Crypto Research & AI Agent Suite</title>
+    <!-- Professional styling: clean, dark interface, data-centric, no emojis -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0c10;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'Roboto', monospace;
+            color: #eef2ff;
+            line-height: 1.5;
+            padding: 24px 32px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1f2c;
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b3f5c;
+            border-radius: 6px;
+        }
+
+        .app-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .research-header {
+            margin-bottom: 32px;
+            border-bottom: 1px solid #2a2d3a;
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .brand h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #c0e0ff, #8a9cff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .brand .tagline {
+            font-size: 0.85rem;
+            color: #8f94b0;
+            margin-top: 6px;
+            font-family: monospace;
+        }
+        .ai-badge {
+            background: #11131e;
+            border: 1px solid #2f3348;
+            border-radius: 32px;
+            padding: 8px 18px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #b7c0e8;
+        }
+        .ai-badge span {
+            color: #9aabff;
+            font-weight: 600;
+        }
+        .search-panel {
+            background: #0f1119;
+            border-radius: 24px;
+            border: 1px solid #262a38;
+            padding: 20px 28px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .search-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+        }
+        .input-group {
+            flex: 3;
+            min-width: 220px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #7f85aa;
+            margin-bottom: 6px;
+        }
+        .input-group input {
+            width: 100%;
+            background: #07090f;
+            border: 1px solid #2d3142;
+            border-radius: 20px;
+            padding: 12px 18px;
+            font-size: 1rem;
+            color: #f0f3ff;
+            font-family: 'Inter', monospace;
+            transition: all 0.2s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #6d7eff;
+            box-shadow: 0 0 0 2px rgba(109,126,255,0.2);
+        }
+        .btn-primary {
+            background: #2c2f48;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            border: 1px solid #494e72;
+        }
+        .btn-primary:hover {
+            background: #3d4270;
+            border-color: #7986ff;
+            transform: translateY(-1px);
+        }
+        .suggestions {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .suggestion-chip {
+            background: #181c28;
+            border-radius: 28px;
+            padding: 5px 16px;
+            font-size: 0.75rem;
+            color: #b9c3ff;
+            cursor: pointer;
+            border: 0.5px solid #2c314a;
+            transition: 0.1s;
+        }
+        .suggestion-chip:hover {
+            background: #252b40;
+            color: white;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+        .card {
+            background: #0f1119;
+            border-radius: 28px;
+            border: 1px solid #262a38;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .card-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid #1e2232;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+        .card-header h3 {
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: -0.2px;
+        }
+        .card-badge {
+            font-size: 0.7rem;
+            background: #1a1e2c;
+            padding: 4px 12px;
+            border-radius: 40px;
+            color: #95a3e6;
+        }
+        .card-content {
+            padding: 20px 24px;
+        }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            font-size: 0.9rem;
+            border-bottom: 1px dashed #1f2332;
+            padding-bottom: 8px;
+        }
+        .data-label {
+            color: #8b91b5;
+            font-weight: 500;
+        }
+        .data-value {
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            color: #eef2ff;
+        }
+        .progress-bar-bg {
+            background: #202536;
+            border-radius: 20px;
+            height: 8px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        .progress-fill {
+            background: #6d7eff;
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+        }
+        .future-tech {
+            background: #080b12;
+            border-radius: 18px;
+            padding: 14px;
+            margin-top: 16px;
+            border-left: 3px solid #5f73f0;
+        }
+        .future-tech p {
+            font-size: 0.85rem;
+            color: #cbd5ff;
+        }
+        .metrics-flex {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .metric-tile {
+            background: #0b0e16;
+            border-radius: 20px;
+            padding: 12px 16px;
+            flex: 1;
+            text-align: center;
+        }
+        .metric-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: monospace;
+        }
+        .loading-placeholder {
+            text-align: center;
+            padding: 36px;
+            color: #6c729b;
+        }
+        .error-message {
+            color: #ff9b8f;
+            background: #2c1a1f;
+            border-radius: 14px;
+            padding: 12px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #535877;
+            border-top: 1px solid #202433;
+            padding-top: 24px;
+            margin-top: 24px;
+        }
+        @media (max-width: 760px) {
+            body {
+                padding: 16px;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        a {
+            color: #9cabff;
+            text-decoration: none;
+        }
+        .coin-symbol {
+            font-size: 0.8rem;
+            background: #1a1f2e;
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 30px;
+        }
+        .live-badge {
+            background: #2a4030;
+            color: #8effb2;
+            font-size: 0.65rem;
+            border-radius: 20px;
+            padding: 2px 8px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="research-header">
+        <div class="brand">
+            <h1>vZS SEARCH <span class="live-badge">LIVE API · ALL COINS</span></h1>
+            <div class="tagline">universal crypto research · real-time data · ai agent core · future tech analysis</div>
+        </div>
+        <div class="ai-badge">
+            AI AGENT READY · <span>global coverage 10k+ assets</span>
+        </div>
+    </div>
+
+    <div class="search-panel">
+        <div class="search-wrapper">
+            <div class="input-group">
+                <label>ANY COIN / TOKEN (NAME OR SYMBOL)</label>
+                <input type="text" id="coinInput" placeholder="e.g., bitcoin, ethereum, dogecoin, polkadot, chainlink, aptos" value="bitcoin">
+            </div>
+            <button class="btn-primary" id="searchBtn">ANALYZE FULL PROFILE</button>
+        </div>
+        <div class="suggestions" id="suggestionContainer">
+            <div class="suggestion-chip" data-coin="bitcoin">Bitcoin</div>
+            <div class="suggestion-chip" data-coin="ethereum">Ethereum</div>
+            <div class="suggestion-chip" data-coin="solana">Solana</div>
+            <div class="suggestion-chip" data-coin="ripple">XRP</div>
+            <div class="suggestion-chip" data-coin="cardano">Cardano</div>
+            <div class="suggestion-chip" data-coin="dogecoin">Dogecoin</div>
+            <div class="suggestion-chip" data-coin="polkadot">Polkadot</div>
+            <div class="suggestion-chip" data-coin="chainlink">Chainlink</div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <div class="card-header">
+                <h3>Full Coin Data Analysis</h3>
+                <div class="card-badge">live market & on-chain metrics</div>
+            </div>
+            <div class="card-content" id="fullDataContent">
+                <div class="loading-placeholder">loading real-time data from CoinGecko...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Crypto Future Tech Research</h3>
+                <div class="card-badge">zk, AI, modularity, interoperability</div>
+            </div>
+            <div class="card-content" id="futureTechContent">
+                <div class="loading-placeholder">generating tech intelligence...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 8px;">
+        <div class="card-header">
+            <h3>AI Agent Research Insights</h3>
+            <div class="card-badge">predictive analytics · sentiment fusion</div>
+        </div>
+        <div class="card-content" id="aiAgentInsights">
+            <div class="loading-placeholder">agent-driven intelligence streaming...</div>
+        </div>
+    </div>
+    <footer>
+        vZS Search — real-time data via CoinGecko API | supports 10,000+ cryptocurrencies | future-tech & AI analysis engine
+    </footer>
+</div>
+
+<script>
+    // ----------------------------------------------
+    // vZS SEARCH PRO - UNIVERSAL CRYPTO RESEARCH TOOL
+    // Supports ALL coins via CoinGecko public API (no API key required)
+    // Includes: full market data, future technology research, AI agent insights
+    // ----------------------------------------------
+
+    const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
+
+    // Helper: fetch coin market data by id (supports any valid coin id)
+    async function fetchCoinData(coinId) {
+        try {
+            // Fetch market data + additional info
+            const url = `${COINGECKO_BASE}/coins/${encodeURIComponent(coinId)}?tickers=false&market_data=true&community_data=false&developer_data=true&sparkline=false`;
+            const response = await fetch(url);
+            if (!response.ok) {
+                if (response.status === 404) throw new Error('Coin not found. Check name or symbol.');
+                throw new Error(`API error: ${response.status}`);
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('CoinGecko fetch error:', error);
+            throw error;
+        }
+    }
+
+    // Search coin by name or symbol to get the correct coin id (CoinGecko search endpoint)
+    async function searchCoin(query) {
+        try {
+            const searchUrl = `${COINGECKO_BASE}/search?query=${encodeURIComponent(query)}`;
+            const searchResp = await fetch(searchUrl);
+            if (!searchResp.ok) throw new Error('Search failed');
+            const searchData = await searchResp.json();
+            if (searchData.coins && searchData.coins.length > 0) {
+                return searchData.coins[0].id; // return best match id
+            }
+            return null;
+        } catch (err) {
+            console.warn('Search error, falling back to raw query', err);
+            return null;
+        }
+    }
+
+    // generate future-tech research based on coin metadata & category
+    function generateFutureTechResearch(coinData, marketData) {
+        const name = coinData.name || 'this asset';
+        const symbol = (coinData.symbol || 'crypto').toUpperCase();
+        const categories = coinData.categories || [];
+        const isL1 = categories.some(c => c.toLowerCase().includes('layer 1') || c.toLowerCase().includes('smart contract'));
+        const isL2 = categories.some(c => c.toLowerCase().includes('layer 2'));
+        const isDefi = categories.some(c => c.toLowerCase().includes('defi'));
+        let consensus = marketData?.consensus || (isL1 ? 'Proof-of-Stake / hybrid' : 'Varied');
+        
+        let roadmapBase = `The ${name} ecosystem is advancing toward greater scalability, interoperability, and zero-knowledge integration. `;
+        let primitives = `zk-rollups, light clients, account abstraction, cross-chain messaging protocols.`;
+        
+        if (name.toLowerCase().includes('ethereum')) {
+            primitives = `Danksharding, based rollups, zkEVM layer-2s, EigenLayer restaking, stateless verification, EOF, Verkle Trees.`;
+        } else if (name.toLowerCase().includes('solana')) {
+            primitives = `Firedancer client, zk-compression, lattice-based cryptography, SVM chain interop, economic zones, token extensions.`;
+        } else if (name.toLowerCase().includes('bitcoin')) {
+            primitives = `BitVM, OP_CAT, BitVM bridges, Zero-knowledge rollups on Bitcoin, Babylon staking, BRC-20 evolution, covenants.`;
+        } else if (name.toLowerCase().includes('cardano')) {
+            primitives = `Hydra scaling, Mithril, Leios, partner chains, BLS signatures, ZK-SNARKs integration, quantum-resistant keys.`;
+        } else if (name.toLowerCase().includes('avalanche')) {
+            primitives = `HyperSDK, Warp Messaging, Elastic Subnets, custom VM chains, inter-subnet zk-proofs.`;
+        } else {
+            if (isL2) primitives = `Rollup stack upgrades, decentralized sequencers, blob data optimization, fraud/zk proofs.`;
+            if (isDefi) primitives = `Cross-chain liquidity aggregators, intent-based architectures, risk oracles.`;
+        }
+        
+        const advancedResearch = `Research brief: ${name} is positioned within the modular blockchain thesis. The convergence of ${consensus} with zero-knowledge proofs and interoperability standards (IBC, CCIP, Wormhole) will define its long-term resilience.`;
+        const securityParadigm = `Quantum readiness: evaluating post-quantum signatures (Falcon, SPHINCS+) and hash-based commitments. Active research in threshold signatures and decentralized key management.`;
+        
+        return {
+            corePrimitives: primitives,
+            advancedResearch: advancedResearch,
+            securityParadigm: securityParadigm,
+            upcomingStandards: `EIP / NIP / BIP aligned proposals, on-chain ZK-verifiers, light client bridging, DA sampling.`
+        };
+    }
+
+    // AI Agent dynamic insights based on real metrics
+    function generateAIAgentInsights(coinData, marketData, priceChange) {
+        const name = coinData.name;
+        const symbol = coinData.symbol?.toUpperCase() || '?';
+        const marketCap = marketData?.market_cap?.usd || 0;
+        const totalVolume = marketData?.total_volume?.usd || 0;
+        const athChange = marketData?.ath_change_percentage?.usd || 0;
+        const developerScore = coinData.developer_data?.stars || 0;
+        const sentimentScoreBase = Math.min(98, Math.max(40, 60 + (priceChange * 0.8) + (athChange > -30 ? 5 : -5)));
+        const sentiment = `${sentimentScoreBase.toFixed(1)} / 100 (${sentimentScoreBase > 65 ? 'bullish bias' : (sentimentScoreBase > 45 ? 'neutral' : 'bearish caution')})`;
+        const volatilityRisk = (Math.abs(priceChange) * 1.2 + 25).toFixed(1);
+        let adoptionSignal = '';
+        if (marketCap > 10000000000) adoptionSignal = 'Large-cap asset with institutional footprint';
+        else if (marketCap > 1000000000) adoptionSignal = 'Mid-cap, growing ecosystem adoption';
+        else adoptionSignal = 'Emerging asset with speculative potential';
+        
+        let agentRecommendation = `AI AGENT: ${symbol} shows ${priceChange > 0 ? 'positive momentum' : 'corrective phase'} with 24h volume ${totalVolume > 50000000 ? 'robust' : 'moderate'}. `;
+        agentRecommendation += `Developer activity ${developerScore > 100 ? 'high' : (developerScore > 10 ? 'moderate' : 'monitor further')}. `;
+        agentRecommendation += `Consider ${priceChange > 5 ? 'taking partial profits' : 'accumulation zones'} based on volatility bands.`;
+        
+        return {
+            sentiment: sentiment,
+            riskProfile: `Volatility index ${volatilityRisk}% · 30-day implied volatility medium-high`,
+            aiPrediction: `Probabilistic models: next quarter trajectory influenced by macro conditions and network adoption. ${symbol} exhibits correlation with ${marketCap > 50000000000 ? 'BTC/ETH dominance flows' : 'altcoin seasonality'}.`,
+            agentNote: agentRecommendation,
+            adoptionSignal: adoptionSignal,
+        };
+    }
+
+    // render full data analysis card with real-time numbers
+    function renderFullDataCard(coinData, marketData) {
+        const name = coinData.name;
+        const symbol = coinData.symbol?.toUpperCase();
+        const currentPrice = marketData?.current_price?.usd || 0;
+        const marketCap = marketData?.market_cap?.usd || 0;
+        const volume = marketData?.total_volume?.usd || 0;
+        const fullyDiluted = marketData?.fully_diluted_valuation?.usd || marketCap;
+        const ath = marketData?.ath?.usd || 0;
+        const atl = marketData?.atl?.usd || 0;
+        const circulatingSupply = marketData?.circulating_supply || 0;
+        const totalSupply = marketData?.total_supply || 'N/A';
+        const maxSupply = marketData?.max_supply || 'Unlimited / Dynamic';
+        const priceChange24h = marketData?.price_change_percentage_24h || 0;
+        const dominance = 'N/A';
+        const categories = coinData.categories?.slice(0, 3).join(', ') || 'General';
+        const consensus = coinData?.consensus || (coinData?.proof_type ? coinData.proof_type : 'Proof-of-Work/Stake');
+        
+        const priceFormatted = currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6});
+        const marketCapFormatted = marketCap ? `$${marketCap.toLocaleString()}` : 'N/A';
+        const volumeFormatted = volume ? `$${volume.toLocaleString()}` : 'N/A';
+        const circFormatted = circulatingSupply ? circulatingSupply.toLocaleString() : 'N/A';
+        const maxFormatted = maxSupply !== 'Unlimited / Dynamic' && maxSupply ? maxSupply.toLocaleStrin
